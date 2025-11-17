@@ -1,55 +1,56 @@
+// src/App.tsx
 import { useState } from 'react'
+import TextArea from './components/TextArea'
+import Buttons from './components/Buttons'
+import ResultBox from './components/ResultBox'
 import { reverseText, countWords, toTitleCase } from './utils/textTools'
-import './App.css'
+import './styles.css'
+import PostPreview from './components/PostPreview'
 
-function App() {
-  const [text, setText] = useState('')
-  const [result, setResult] = useState('')
+export default function App() {
+  const [text, setText] = useState<string>('')
+  const [result, setResult] = useState<string>('')
+
+  const handleReverse = () => setResult(reverseText(text))
+  const handleTitleCase = () => setResult(toTitleCase(text))
+  const handleCount = () => setResult(`Word Count: ${countWords(text)}`)
 
   return (
-    <div className="container">
-      <header>
-        <h1>🔧 Mini Text Toolkit</h1>
-        <p>Week 1 Lab - String Manipulation</p>
-      </header>
+    <main className="container">
+      <a className="skip" href="#result">
+        Skip to result
+      </a>
+      <h1>Mini Text Toolkit</h1>
 
-      <main>
-        <div className="input-section">
-          <label htmlFor="input">Enter your text:</label>
-          <textarea
-            id="input"
-            value={text}
-            onChange={e => setText(e.target.value)}
-            placeholder="Type or paste text here..."
-            rows={6}
-          />
-        </div>
+      <TextArea value={text} onChange={setText} />
 
-        <div className="buttons">
-          <button onClick={() => setResult(reverseText(text))}>
-            🔄 Reverse
-          </button>
-          <button onClick={() => setResult(toTitleCase(text))}>
-            🔤 Title Case
-          </button>
-          <button onClick={() => setResult(`Word Count: ${countWords(text)}`)}>
-            🔢 Count Words
-          </button>
-        </div>
+      <Buttons
+        disabled={!text}
+        onReverse={handleReverse}
+        onTitleCase={handleTitleCase}
+        onCount={handleCount}
+      />
 
-        <div className="output-section">
-          <label htmlFor="output">Result:</label>
-          <div id="output" className="output">
-            {result || 'Your result will appear here...'}
-          </div>
-        </div>
-      </main>
+      <ResultBox result={result} />
 
-      <footer>
-        <p>Built by [Your Name] • Code Camp Week 1 Lab</p>
+      <hr />
+      <h2>Mini-Medium Preview</h2>
+
+      <label htmlFor="title" className="label">
+        Post title
+      </label>
+      <input
+        id="title"
+        value={text}
+        onChange={e => setText(e.target.value)}
+        placeholder="A crisp headline"
+      />
+
+      <PostPreview title={text} body={result} />
+
+      <footer className="footer">
+        Built by <strong>Your Name</strong> · Week 1
       </footer>
-    </div>
+    </main>
   )
 }
-
-export default App
